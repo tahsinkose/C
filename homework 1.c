@@ -1,3 +1,8 @@
+/*************************************************************
+* Below program prints rectangles with specified width, height
+* and thickness, whenever possible. If it is not, it simply
+* prints the full rectangle.
+*************************************************************/
 #include <stdio.h>
 
 int rectangle();//prototype
