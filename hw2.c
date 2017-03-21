@@ -4,7 +4,7 @@
 #define PI 3.14
 #define MAXSIZE 80
 /*Initial Declarations and Notes
-I didn't create any memory function, because all the calculating functions automatically evaluate and take to memory the last result. 
+I didn't create any memory function, because all the calculating functions automatically evaluate and take the last result to memory . 
 I didn't create any clear function, honestly, I didn't unterstand the difference between MC and C. So when someone types C, program will direct it to MemoryClear
 function.*/
 
@@ -75,6 +75,9 @@ int main()
 				
 				case 'A':	
 				case 'a':
+					printf("Enter value: ");
+					scanf("%lf",&hold);
+					getchar();
 					printf("Absolute(%.1f) = %.1f\n",hold,absFunc(hold));
 					break;
 				case 'C':
@@ -207,6 +210,7 @@ double cosineFunc(double a)
 	double powsix;
 	double powfour;
 	double powtwo;
+	double poweight;
 	double cosx;
 
 	x=(a*PI)/180;
