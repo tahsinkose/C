@@ -7,36 +7,51 @@ void printStrings(char ** strings,int size){
 
 	for(int j=0;j<size;j++)
 	{
-		printf("%s\n",strings[j]);
+		printf("%s",strings[j]);
 	}
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	int count = 0,total_string_number;
+	if(argc!=2){
+		printf("Usage : %s <file>\n",argv[0]);
+		exit(0);
+	} 
+	FILE * fp;
+	char* line = NULL;
+	fp = fopen("test.txt","r");
+	if (fp == NULL)
+        	exit(EXIT_FAILURE); 
+	int total_string_number = 0;
+	size_t len = 0;
+	ssize_t read;
 	char **strings = NULL, **additional_strings = NULL;
-	char *string;
-	printf("Please enter the total number of strings you want to sort : ");
-	scanf("%d",&total_string_number);
-	do{
-		printf("Enter a string name : ");
-		string = malloc(sizeof(char)*16);
-		scanf("%15s",string);
-		count++;
-		
-		additional_strings = (char **) realloc(strings,count*sizeof(char*));
+	
+
+	while ((read = getline(&line, &len, fp)) != -1) {
+		char *string = NULL;
+		int i=0;
+		for(;i<strlen(line);i++){
+			string = realloc(string,sizeof(char)*(i+1));
+			string[i] = line[i];
+		}
+		string = realloc(string,sizeof(char)*(i+1));
+		string[i] = '\0';
+    		
+		total_string_number++;
+		additional_strings = (char **) realloc(strings,total_string_number*sizeof(char*));
 
 		if(additional_strings!=NULL){
 			strings = additional_strings;
-			strings[count-1] = string;
+			strings[total_string_number-1] = string;
+			//printStrings(strings,total_string_number);
 		}
 		else{
 			//free(strings);
 			printf("Error (re)allocating memory\n");
 			exit(1);
 		}
-	}while(count<total_string_number);
-	
+	}
 	
 	char *swap;
 	for(int pass = 0;pass<total_string_number-1;pass++)
@@ -56,4 +71,6 @@ int main()
 	for(int i=0;i<total_string_number;i++)
 		free(strings[i]);
 	free(strings);
-}
+	
+	
+}//end main
