@@ -50,7 +50,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 					ptr++;
 					*ptr='x';
 					printMaze(a);
-					mazeTraverse(a,&*ptr,gameStatus);
+					mazeTraverse(a,ptr,gameStatus);
 				}//end if
 				else if(*(ptr+1)=='#')	
 				{
@@ -58,7 +58,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 					ptr-=x;
 					*ptr='x';
 					printMaze(a);
-					mazeTraverse(a,&*ptr,gameStatus);
+					mazeTraverse(a,ptr,gameStatus);
 				}//end else if
 				else if(*(ptr-x)=='#')
 				{
@@ -66,7 +66,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 					ptr+=x;
 					*ptr='x';
 					printMaze(a);
-					mazeTraverse(a,&*ptr,gameStatus);
+					mazeTraverse(a,ptr,gameStatus);
 				}//end else if
 			}//end if
 			else
@@ -75,7 +75,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 				ptr+=x;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}//end else
 		}//end if
 		else if (gameStatus==TOP)
@@ -86,14 +86,14 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 				ptr++;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}
 			else if(*(ptr-x)!='#')
 			{
 				ptr-=x;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}//end else
 			else if(*(ptr-x)=='#')
 			{
@@ -101,18 +101,18 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 				ptr--;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}//end else if
 		}//end else if
 			
 		else if(gameStatus==DOWN)
 		{	
-			if(*(ptr-1)=='#' &&*(ptr+x)!='#')
+			if(*(ptr-1)=='#' &(ptr+x)!='#')
 			{
 				ptr+=x;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}
 			else
 			{
@@ -120,7 +120,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 				ptr-=1;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}//end else
 		}//end else if
 		else if(gameStatus==LEFT)
@@ -132,7 +132,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 					ptr-=1;
 					*ptr='x';	
 					printMaze(a);
-					mazeTraverse(a,&*ptr,gameStatus);
+					mazeTraverse(a,ptr,gameStatus);
 				}//end if
 				else 
 				{
@@ -142,7 +142,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 						ptr++;
 						*ptr='x';
 						printMaze(a);
-						mazeTraverse(a,&*ptr,gameStatus);
+						mazeTraverse(a,ptr,gameStatus);
 					}
 					else
 					{
@@ -150,7 +150,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 						ptr+=x;
 						*ptr='x';
 						printMaze(a);
-						mazeTraverse(a,&*ptr,gameStatus);
+						mazeTraverse(a,ptr,gameStatus);
 					}//end else
 				}//end else
 			}//end if	
@@ -160,7 +160,7 @@ void mazeTraverse(char a[][SIZE],char* ptr,enum Status gameStatus)
 				ptr-=x;
 				*ptr='x';
 				printMaze(a);
-				mazeTraverse(a,&*ptr,gameStatus);
+				mazeTraverse(a,ptr,gameStatus);
 			}//end else
 		}//end else if
 	}//end else
@@ -183,4 +183,3 @@ void printMaze(char arr[][SIZE])
 	}//end for
 	getchar();
 }
-
