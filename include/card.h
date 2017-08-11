@@ -1,15 +1,32 @@
 #ifndef CARD_H_
 #define CARD_H_
+#include "mergesort.h"
 
 #define SUITS 4
 #define FACES 13
 #define CARDS 52
 #define HAND_DECK_SIZE 5
-#include "mergesort.h"
+
+#define P1_WINS 1
+#define P2_WINS 2
+#define P1_WITHC 99
+#define P2_WITHC -99
+#define TIE 0
+
+#define TRIPLET 3
+#define FULL_HOUSE 4
+#define FLUSH 5
+#define STRAIGHT 6
+#define FOURTET 7
+
+
+
 const char* suit[SUITS]={"Hearts","Diamonds","Clubs","Spades"};
 const char* face[FACES]={"Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"};
+unsigned int deck[SUITS][FACES]={0};
+unsigned int bigDeck[CARDS+1]={0};
 
-void shuffle(unsigned int wDeck[][FACES])
+void shuffle()
 {
 	size_t row;	
 	size_t column;
@@ -20,26 +37,23 @@ void shuffle(unsigned int wDeck[][FACES])
 		do{
 			row=rand() % SUITS;
 			column=rand() % FACES;
-		}while (wDeck[row][column]!=0);//first row and column are chosen. then if that particular place's value is 0, start to insert the cards.
+		}while (deck[row][column]!=0);//first row and column are chosen. then if that particular place's value is 0, start to insert the cards.
 
 		
-		wDeck[row][column]=card;
+		deck[row][column]=card;
 	}//end for
-}//end shuffle
+}
 
 
 
 int checkpair(unsigned const int handDeck[], int *ptr)
 {
-	size_t i;
-	size_t j;
-	
 	int pairs=0;
-	for(i=0;i<HAND_DECK_SIZE;i++)
+	for(int i=0;i<HAND_DECK_SIZE;i++)
 	{
-		for(j=0;j<HAND_DECK_SIZE;j++)
+		for(int j=i+1;j<HAND_DECK_SIZE;j++)
 		{
-			if(handDeck[i]==handDeck[j] && j>i && *ptr!=handDeck[i])
+			if(handDeck[i]==handDeck[j] && *ptr!=handDeck[i])
 			{
 				*ptr=handDeck[i];
 				pairs++;
@@ -47,93 +61,82 @@ int checkpair(unsigned const int handDeck[], int *ptr)
 		}//end for
 	}//end for
 	return pairs;
-}//end checkpair
+}
 
 int checktriple(unsigned const int handDeck[], int *ptr)
 {
-	size_t i;
-	size_t j;
-	
-	
-	for(i=0;i<HAND_DECK_SIZE;i++)
+	for(int i=0;i<HAND_DECK_SIZE;i++)
 	{
-		for(j=0;j<HAND_DECK_SIZE;j++)
+		for(int j=i+1;j<HAND_DECK_SIZE;j++)
 		{
-			if(handDeck[i]==handDeck[j] && j>i && *ptr==handDeck[j])
-			{
+			if(handDeck[i]==handDeck[j] && *ptr==handDeck[j])
 				return 1;
-			}//end if
-			else if(handDeck[i]==handDeck[j] && j>i && *ptr!=handDeck[j])
-			{
+			else if(handDeck[i]==handDeck[j] && *ptr!=handDeck[j])
 				*ptr=handDeck[j];
-			}//end else if
-			
 		}//end for
 	}//end for
 	return 0;
-}//end checktriple
-
-int checkflush(unsigned const int columnDeck[],unsigned const int rowDeck[])
-{
-	size_t i=0;
-	
-	for(size_t j=0;j<HAND_DECK_SIZE;j++)
-	{
-		if(rowDeck[i]!=rowDeck[j] && j>i)
-		{
-			return 0;
-		}//end if
-		
-	}//end for
-	return 1;
-}//end checkflush
-
-int checkfour(unsigned const int handDeck[])
-{
-	size_t i;
-	size_t j;	
-	int check=13;
-	int count=1;//Because variable check won't match with the handDeck[j] at the first time.So that match should be counted as happened.
-	for(i=0;i<HAND_DECK_SIZE;i++)
-	{
-		for(j=0;j<HAND_DECK_SIZE;j++)
-		{
-			if(handDeck[i]==handDeck[j] && j>i && check==handDeck[j])
-			{
-				if(++count==4)
-				{
-					return count;
-				}
-				
-			}
-			else if(handDeck[i]==handDeck[j] && j>i && check!=handDeck[j])
-			{
-				check=handDeck[j];
-			}
-		}//end for
-		count=1;//This variable must be resetted.So in one hand there can't be two fourtets.
-	}//end for
-	return 0;
-	
-}//end checkfour
-
-int checkstraight(unsigned  int handDeck[])
-{
-	
+}
+int checkHand(unsigned int handDeck[],unsigned const int handFlushDeck[], int* ptrCh){
 	
 	mergeSort(handDeck,0,HAND_DECK_SIZE-1);
-	size_t i=0;
-	for(;i<4;i++)
+	int count = 0;
+	int save_face=FACES; //Initially assign it to the impossible value.
+	int pairs=0;
+	for(int i=0;i<4;i++){
+		if((handDeck[i]+1)==handDeck[i+1])
+			count++;
+		else
+			break;
+	}//check whether hand is straight
+	if(count == 4)
+		return STRAIGHT;
+
+	count = 0;//clear count.
+	
+	
+	for(int i=0,j=1;j<HAND_DECK_SIZE;j++)
 	{
-		if((handDeck[i]+1)!=handDeck[i+1])
+		if(handFlushDeck[i]==handFlushDeck[j])
+			count++;
+		else
+			break;
+	}
+	if(count == 4)	
+		return FLUSH;
+		
+	
+	count=1;// save_face won't match with the handDeck[j] at the first time.So that match should be counted as happened.
+	for(int i=0;i<2;i++)
+	{
+		for(int j=i+1;j<HAND_DECK_SIZE;j++)
 		{
-			return 0;
-		}//end if
-	}//end for
-	return 1;
+			if(handDeck[i]==handDeck[j] && save_face==handDeck[j])
+				count++;
+			else if(handDeck[i]==handDeck[j] && save_face!=handDeck[j])
+				save_face=handDeck[j];
+		}
+		count=1;//This variable must be resetted.So in one hand there can't be two fourtets.
+	}
+	if(count == 4)
+		return FOURTET;
+
+
+
+	if(checktriple(handDeck,ptrCh)){
+		if(checkpair(handDeck,ptrCh))
+			return FULL_HOUSE;
+		return TRIPLET;
+	}//end if
+	else{
+		*ptrCh=13;//It should be resetted.
+		return checkpair(handDeck,ptrCh);
+	}
+
 }
 
-int deal(unsigned int wDeck[][FACES],int*ptrCh,unsigned int arr[])
+
+int deal(int*ptrCh)
 {
 	size_t card;
 	size_t row;
@@ -149,16 +152,16 @@ int deal(unsigned int wDeck[][FACES],int*ptrCh,unsigned int arr[])
 	for(card=0;card<HAND_DECK_SIZE;card++)
 	{
 		choose=rand()%52 + 1;
-		if(arr[choose]==0)
+		if(bigDeck[choose]==0)
 		{
 			for(row=0;row<SUITS;row++)
 			{
 				for(column=0;column<FACES;column++)
 				{
-					if(wDeck[row][column]==choose)
+					if(deck[row][column]==choose)
 					{
-						wDeck[row][column]=0;
-						arr[choose]++;
+						deck[row][column]=0;
+						bigDeck[choose]++;
 						printf("%5s of %-8s\n",face[column],suit[row]);
 						hand[card]=column;//To check their pairness.
 						handFlush[card]=row;
@@ -172,72 +175,11 @@ int deal(unsigned int wDeck[][FACES],int*ptrCh,unsigned int arr[])
 		}
 	}//end for
 	
-																								for(int a=0;a<HAND_DECK_SIZE;a++)
-																								{
-																								printf("%u ",hand[a]);
-																								}
-																								puts("");					
-		
-	
-	if(checkfour(hand)==4)
-	{
-		puts("");
-		printf("Hand has a fourtet.");
-		result=7;
-	}
-	else
-	{
-		
-		if(checktriple(hand,&*ptrCh))
-		{
-			puts("");
-			printf("Hand has a triple.\n");
-			result=3;
-			if(checkpair(hand,&*ptrCh))
-			{
-				printf("Hand has a pair.\n");
-				printf("It made full house now.\n");
-				result=4;
-			}//end if /*These algoritm is not completely true, but not wrong also.Should be optimized.*/
-		}//end if
-		else
-		{
-			*ptrCh=13;//It should be resetted.
-			if(checkpair(hand,&*ptrCh)==2)
-			{
-			printf("\nHand has two pair.\n");
-			result=2;
-			}
-			*ptrCh=13;//It should be resetted again.
-			if(checkpair(hand,&*ptrCh)==1)
-			{
-				printf("\nHand has a pair.\n");
-				result=1;
-			}//end else if
-			*ptrCh=13;//It should be resetted again.
-			if(checkpair(hand,&*ptrCh)==0)
-			{
-				result=0;
-			}
-		}//end else
-			
-	}//end else
-		
-	
-	if(checkflush(hand,handFlush))
-	{
-		puts("");
-		printf("Hand is a flush.");
-		result=HAND_DECK_SIZE;
-	}	
+	for(int a = 0; a < HAND_DECK_SIZE;a++)
+		printf("%u ",hand[a]);
+	puts("");
 
-	
-	if(checkstraight(hand))
-	{
-		puts("");
-		printf("Hand is a straight.");
-		result=6;
-	}
+	result = checkHand(hand,handFlush,ptrCh);
 	return result;
 }//end deal
 
@@ -245,45 +187,20 @@ int deal(unsigned int wDeck[][FACES],int*ptrCh,unsigned int arr[])
 
 
 
-void compare(int a,int b,int*c,int*d)
+int compare(int a,int b,int c,int d)
 {
 	if(a>b)
-	{
-		puts("");
-		printf("Player 1 wins by a>b.");
-	}
+		return P1_WINS;
 	else if(b>a)
-	{
-		puts("");
-		printf("Player 2 wins by b>a.");
-	}//end else if
+		return P2_WINS;
 	else
 	{
-		if(c>d && d!=0)
-		{
-			puts("");
-			printf("Player 1 wins by check1>check2.");
-		}
-		else if(d>c && c!=0)
-		{
-			puts("");
-			printf("Player 2 wins by check2>check1.");
-		}
-		else if(c==0)
-		{
-			puts("");
-			printf("Player 1 wins by check1=0");
-		}//end inner else
-		else if(d==0)
-		{
-			puts("");
-			printf("Player 2 wins by check2=0");
-		}
+		if(c>d && d!=0 || c==0)
+			return P1_WITHC;
+		else if(d>c && c!=0 || d==0)
+			return P2_WITHC;
 		else
-		{
-			puts("");
-			printf("Tie.");
-		}//end else
+			return TIE;
 	}//end outer else
 }
 
