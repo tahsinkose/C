@@ -12,8 +12,6 @@ int main()
 	scanf("%d",&level);
 	printf("To live in a dream\n");
 	dream(level,step);
-	
-	
 	printf("makes hard to unravel the inception");
 }//end main
 
@@ -30,11 +28,6 @@ void dream(int a,int b)
 			printf("***");
 		printf("caught by the police of rank %d\n",a+1);
 	}//end if
-	
-	else
-	{
-		
-	}//end else
 }//end function thief
 
 
