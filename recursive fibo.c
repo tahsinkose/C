@@ -21,7 +21,6 @@ int main(){
 
 unsigned long long int fibonacci(int i)
 {
-	
 	if (0==i || 1==i)
 	{	
 		return i ;
@@ -30,7 +29,4 @@ unsigned long long int fibonacci(int i)
 	{
 		return fibonacci(i-1)+fibonacci(i-2);
 	}//end else
-	
-	
-
 }
