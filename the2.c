@@ -21,22 +21,8 @@ void printCurrentSlice(TaskWheel *a)
 }
 int checkDRILL(char *b)
 {
-	if(b[0]=='D')
-	{
-		if(b[1]=='R')
-		{
-			if(b[2]=='I')
-			{
-				if(b[3]=='L')
-				{
-					if(b[4]=='L')
-					{
-						return 1;
-					}
-				}
-			}
-		}
-	}
+	if(b[0]=='D' && b[1]=='R' && b[2]=='I' && b[3]=='L' && b[4]=='L')
+		return 1;
 	return 0;
 }
 TaskWheel * command(TaskWheel *a,int *ip,char *currDir,char *comm)
