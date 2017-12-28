@@ -44,10 +44,9 @@ int main(int argc, char** argv)
 		if(additional_strings!=NULL){
 			strings = additional_strings;
 			strings[total_string_number-1] = string;
-			//printStrings(strings,total_string_number);
+			
 		}
 		else{
-			//free(strings);
 			printf("Error (re)allocating memory\n");
 			exit(1);
 		}
