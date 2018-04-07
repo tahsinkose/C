@@ -1,3 +1,7 @@
+/*
+ * Instead of hard coding the maze and start point, user input can be taken.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
